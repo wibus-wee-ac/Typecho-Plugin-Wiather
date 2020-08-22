@@ -3,17 +3,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
     exit;
 }
 
-
-// 插件设置模块
 include 'libs/setting.php';
-
-// 前端header
 include 'libs/header.php';
-
-// 工具模块 主要是定位和天气
 include 'libs/catch.php';
-
-// 图标文件
 include 'libs/ico.php';
 
 /**
@@ -81,7 +73,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
      *为header添加css文件
      * @return void
      */
-    public static function header(){
+    public static function footer(){
         
         // 天气信息
 		PluginsHead::Weather();
