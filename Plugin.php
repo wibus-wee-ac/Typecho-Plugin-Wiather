@@ -9,7 +9,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Wiather
  * @author Wibus
- * @version 1.2.0
+ * @version 1.2.1
  * @link https://blog.iucky.cn
  */
 class Wiather_Plugin implements Typecho_Plugin_Interface{
@@ -83,7 +83,7 @@ class PluginsForm{
 	// 天气信息
 	static function Weather(){
 		
-		$result = new Typecho_Widget_Helper_Form_Element_Text('Weather', NULL, _t('a03c706da9ec87d07b6b2d2684ac94e3'), _t('天气信息'), _t('填写申请了的高德API（默认的API也可以用）'));
+		$result = new Typecho_Widget_Helper_Form_Element_Text('Weather', NULL, _t('9dea1edbf46b6e2d0c52c77858b4db3b'), _t('天气信息'), _t('填写申请了的高德API（默认的API也可以用）'));
 		
 		return $result;
 	}
