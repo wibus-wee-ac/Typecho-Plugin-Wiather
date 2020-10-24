@@ -48,7 +48,19 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
      */
     public static function config(Typecho_Widget_Helper_Form $form){
 
-        
+         // 是否使用handsome主题自带提醒
+		 $handsome = new Typecho_Widget_Helper_Form_Element_Radio(
+            'handsome',
+            array(
+                '0' => _t('是'),
+                '1' => _t('否'),
+            ),
+            '1',
+            _t('是否使用handsome自带弹窗提醒（推荐）'),
+            _t('非handsome主题请不要启动此选项，否则无法正常使用')
+        );
+		$form->addInput($handsome);
+		
         // 天气信息
         $form->addInput(PluginsForm::Weather());
         
@@ -70,7 +82,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
      * @return void
      */
     public static function footer(){
-        
+
         // 天气信息
 		PluginsHead::Weather();
     }
@@ -235,22 +247,52 @@ class PluginsHead{
     		    }else{
     		        
     		        $ico = Ico::Weather("unknown");
-    		    }
-    		    echo '<script type="text/javascript" src="/usr/plugins/Wiather/static/libs/jquery-3.5.1.min.js"></script>';
-    		    echo '<script type="text/javascript">
-    		        $(function(){
-    		        
-		                    $(".dropdown.wrapper").after("<div id=\"Weather\"><div class=\"w-city\">'. $city .'</div><div class=\"w-ico\">'. $ico .'</div><div class=\"w-temperature\">'. $temperature .'</div><div class=\"w-weather\">'. $weatherInfo .'</div></div>");
-		                    
-		                    if($(".app-aside-folded").length>0){
-                                 $("div#Weather").css("display","none");
-                            }
-                            
-                            $("div#Weather").click(function(){
-                                    alert("\n您的IP是：'.ClientInfo::GetUserIP().'\n\n您的操作系统是：'.ClientInfo::GetOS().'\n\n您使用的浏览器是：'.ClientInfo::GetUserBrowser().'\n\n您所在的位置是：'.$location->province.$location->city.'\n\n当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C");
-                            })
-                      });
-    				</script>';
+				}
+				
+				$options = Helper::options();
+				$handsome = $options->plugin('Wiather')->handsome;
+			
+			   
+				if ($handsome) { 
+					echo '<script type="text/javascript" src="/usr/plugins/Wiather/static/libs/jquery-3.5.1.min.js"></script>';
+					echo '<script type="text/javascript">
+						$(function(){
+						
+								$(".dropdown.wrapper").after("<div id=\"Weather\"><div class=\"w-city\">'. $city .'</div><div class=\"w-ico\">'. $ico .'</div><div class=\"w-temperature\">'. $temperature .'</div><div class=\"w-weather\">'. $weatherInfo .'</div></div>");
+								
+								if($(".app-aside-folded").length>0){
+									 $("div#Weather").css("display","none");
+								}
+								
+								$("div#Weather").click(function(){
+										alert("\n您的IP是：'.ClientInfo::GetUserIP().'\n\n您的操作系统是：'.ClientInfo::GetOS().'\n\n您使用的浏览器是：'.ClientInfo::GetUserBrowser().'\n\n您所在的位置是：'.$location->province.$location->city.'\n\n当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C");
+								})
+						  });
+						</script>';
+				} else {
+					echo '
+							<script>
+							$(function(){
+						
+								$(".dropdown.wrapper").after("<div id=\"Weather\"><div class=\"w-city\">'. $city .'</div><div class=\"w-ico\">'. $ico .'</div><div class=\"w-temperature\">'. $temperature .'</div><div class=\"w-weather\">'. $weatherInfo .'</div></div>");
+								
+								if($(".app-aside-folded").length>0){
+									 $("div#Weather").css("display","none");
+								}
+								
+							
+							$("div#Weather").click(function(){
+							$.message({
+								message: "当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C<br />您的IP是：'.ClientInfo::GetUserIP().'<br /> 您的操作系统是：'.ClientInfo::GetOS().' <br /> 您使用的浏览器是：'.ClientInfo::GetUserBrowser().' <br />",
+								title: "'.$location->province.$location->city.' 天气情况",
+								type: "info",
+								autoHide: !1,
+								time: "5000"
+							});})
+						});
+							</script>';
+				}
+    		   
     			echo '<script type="text/javascript">
     			        console.log("\n %c Wiather天气插件 - by Wibus https://blog.iucky.cn","color:#fff; background: linear-gradient(to right , #7A88FF, #d27aff); padding:5px; border-radius: 10px;");
     			        </script>';
