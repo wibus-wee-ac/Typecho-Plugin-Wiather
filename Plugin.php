@@ -9,7 +9,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Wiather
  * @author Wibus
- * @version 2.0.0
+ * @version 2.1.0
  * @link https://blog.iucky.cn
  */
 class Wiather_Plugin implements Typecho_Plugin_Interface{
@@ -24,7 +24,8 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
     public static function activate(){
         
         Typecho_Plugin::factory('Widget_Archive')->header = array(__CLASS__, 'header');
-        Typecho_Plugin::factory('Widget_Archive')->footer = array(__CLASS__, 'footer');
+		Typecho_Plugin::factory('Widget_Archive')->footer = array(__CLASS__, 'footer');
+		return _t('插件已启用，请先进入插件设置界面保存一次设置~');
     }
 
     /**
@@ -36,7 +37,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
      * @throws Typecho_Plugin_Exception
      */
     public static function deactivate(){
-    
+		return _t('插件已禁用，感谢您的支持~！');
     }
 
     /**
@@ -47,6 +48,9 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
      * @return void
      */
     public static function config(Typecho_Widget_Helper_Form $form){
+
+		// 天气信息
+        $form->addInput(PluginsForm::Weather());
 
          // 是否使用handsome主题自带提醒
 		 $handsome = new Typecho_Widget_Helper_Form_Element_Radio(
@@ -60,10 +64,21 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
             _t('非handsome主题请不要启动此选项，否则无法正常使用')
         );
 		$form->addInput($handsome);
-		
-        // 天气信息
-        $form->addInput(PluginsForm::Weather());
-        
+
+		//设置handsome提醒的图标
+		$handsomeico = new Typecho_Widget_Helper_Form_Element_Radio(
+            'handsomeico',
+            array(
+                'info' => _t('info'),
+				'success' => _t('success'),
+				'warning' => _t('warning'),
+            ),
+            'info',
+            _t('handsome自带提醒的侧边图标'),
+            _t('若无启用handsome自带提醒，则此项可直接无视')
+        );
+		$form->addInput($handsomeico);
+
         
     }
     
@@ -251,7 +266,7 @@ class PluginsHead{
 				
 				$options = Helper::options();
 				$handsome = $options->plugin('Wiather')->handsome;
-			
+				$handsomeico = $options->plugin('Wiather')->handsomeico;
 			   
 				if ($handsome) { 
 					echo '<script type="text/javascript" src="/usr/plugins/Wiather/static/libs/jquery-3.5.1.min.js"></script>';
@@ -285,7 +300,7 @@ class PluginsHead{
 							$.message({
 								message: "当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C<br />您的IP是：'.ClientInfo::GetUserIP().'<br /> 您的操作系统是：'.ClientInfo::GetOS().' <br /> 您使用的浏览器是：'.ClientInfo::GetUserBrowser().' <br />",
 								title: "'.$location->province.$location->city.' 天气情况",
-								type: "info",
+								type: "'.$handsomeico.'",
 								autoHide: !1,
 								time: "5000"
 							});})
