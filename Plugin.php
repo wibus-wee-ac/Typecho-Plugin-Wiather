@@ -9,7 +9,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Wiather
  * @author Wibus
- * @version 1.2.1
+ * @version 2.0.0
  * @link https://blog.iucky.cn
  */
 class Wiather_Plugin implements Typecho_Plugin_Interface{
