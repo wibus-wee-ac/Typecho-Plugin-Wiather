@@ -268,8 +268,8 @@ class PluginsHead{
 				$handsome = $options->plugin('Wiather')->handsome;
 				$handsomeico = $options->plugin('Wiather')->handsomeico;
 			   
-				if ($handsome) { 
-					echo '<script type="text/javascript" src="/usr/plugins/Wiather/static/libs/jquery-3.5.1.min.js"></script>';
+				if ($handsome == 0) { 
+					//echo '<script type="text/javascript" src="/usr/plugins/Wiather/static/libs/jquery-3.5.1.min.js"></script>';
 					echo '<script type="text/javascript">
 						$(function(){
 						
