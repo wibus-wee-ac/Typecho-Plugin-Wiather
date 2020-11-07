@@ -9,7 +9,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Wiather
  * @author Wibus
- * @version 2.1.0
+ * @version 3.0.0
  * @link https://blog.iucky.cn
  */
 class Wiather_Plugin implements Typecho_Plugin_Interface{
@@ -48,6 +48,29 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
      * @return void
      */
     public static function config(Typecho_Widget_Helper_Form $form){
+        
+        
+                // 插件信息与更新检测
+        function check_update($version)
+        {
+
+            echo "<style>.info{text-align:center; margin:20px 0;} .info > *{margin:0 0 15px} .buttons a{background:#467b96; color:#fff; border-radius:4px; padding: 8px 10px; display:inline-block;}.buttons a+a{margin-left:10px}</style>";
+            echo "<div id='tip'></div>";
+            echo "<div class='info'>";
+            echo "<h2>一款使用高德天气API的 Typecho插件 (" . $version . ")</h2>";
+
+            echo "<h3>最新版本：<span style='padding: 2px 4px; background-image: linear-gradient(90deg, rgba(73, 200, 149, 1), rgba(38, 198, 218, 1)); background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; color: rgba(255, 255, 255, 1); border-width: 0.25em 0' id='ver'>获取中...</span>&nbsp;&nbsp;当前版本：<span id='now'>".$version. "</span></h3>";
+            echo "<h3 style='color: rgba(255, 153, 0, 1)' id='description'></h3>";
+            echo "<p>By: <a href='https://blog.iucky.cn'>Wibus</a></p>";
+            echo "<p><span class='buttons'><a href='https://blog.iucky.cn/system/159.html'>插件说明</a></span>
+            <span id='btn' class='buttons'><a id='description'>获取更新说明</a></span></p>";
+            echo "</div>";
+
+        }
+        check_update("3.0.0");
+
+
+
 
 		// 天气信息
         $form->addInput(PluginsForm::Weather());
@@ -56,10 +79,10 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
 		 $handsome = new Typecho_Widget_Helper_Form_Element_Radio(
             'handsome',
             array(
-                '0' => _t('是'),
-                '1' => _t('否'),
+                '0' => _t('否'),
+                '1' => _t('是'),
             ),
-            '1',
+            '0',
             _t('是否使用handsome自带弹窗提醒（推荐）'),
             _t('非handsome主题请不要启动此选项，否则无法正常使用')
         );
@@ -69,6 +92,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
 		$handsomeico = new Typecho_Widget_Helper_Form_Element_Radio(
             'handsomeico',
             array(
+                '' => _t('不显示'),
                 'info' => _t('info'),
 				'success' => _t('success'),
 				'warning' => _t('warning'),
@@ -79,7 +103,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
         );
 		$form->addInput($handsomeico);
 
-        
+        echo "<script src='https://api.iucky.cn/plugins/update/wiather.js'></script>";
     }
     
     /**
