@@ -9,7 +9,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Wiather
  * @author Wibus
- * @version 3.0.0
+ * @version 3.0.1
  * @link https://blog.iucky.cn
  */
 class Wiather_Plugin implements Typecho_Plugin_Interface{
@@ -23,7 +23,6 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
      */
     public static function activate(){
         
-        Typecho_Plugin::factory('Widget_Archive')->header = array(__CLASS__, 'header');
 		Typecho_Plugin::factory('Widget_Archive')->footer = array(__CLASS__, 'footer');
 		return _t('插件已启用，请先进入插件设置界面保存一次设置~');
     }
@@ -67,7 +66,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
             echo "</div>";
 
         }
-        check_update("3.0.0");
+        check_update("3.0.1");
 
 
 
