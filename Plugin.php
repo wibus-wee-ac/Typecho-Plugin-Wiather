@@ -9,7 +9,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) {
  *
  * @package Wiather
  * @author Wibus
- * @version 3.0.1
+ * @version 3.1.0
  * @link https://blog.iucky.cn
  */
 class Wiather_Plugin implements Typecho_Plugin_Interface{
@@ -66,7 +66,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
             echo "</div>";
 
         }
-        check_update("3.0.1");
+        check_update("3.1.0");
 
 
 
@@ -74,18 +74,19 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
 		// 天气信息
         $form->addInput(PluginsForm::Weather());
 
-         // 是否使用handsome主题自带提醒
-		 $handsome = new Typecho_Widget_Helper_Form_Element_Radio(
-            'handsome',
+         // 天气弹窗样式
+		 $assets = new Typecho_Widget_Helper_Form_Element_Radio(
+            'assets',
             array(
-                '0' => _t('否'),
-                '1' => _t('是'),
+                '0' => _t('原生alret弹窗'),
+				'1' => _t('handsome弹窗'),
+				'2' => _t('Sweetalert2'),
             ),
             '0',
-            _t('是否使用handsome自带弹窗提醒（推荐）'),
-            _t('非handsome主题请不要启动此选项，否则无法正常使用')
+            _t('天气弹窗样式'),
+            _t('非handsome主题请不要选择第二项，否则无法正常使用')
         );
-		$form->addInput($handsome);
+		$form->addInput($assets);
 
 		//设置handsome提醒的图标
 		$handsomeico = new Typecho_Widget_Helper_Form_Element_Radio(
@@ -102,7 +103,25 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
         );
 		$form->addInput($handsomeico);
 
-        echo "<script src='https://api.iucky.cn/plugins/update/wiather.js'></script>";
+		//设置Sweetalert2提醒的图标
+		$sweetico = new Typecho_Widget_Helper_Form_Element_Radio(
+            'sweetico',
+            array(
+				'' => _t('不显示'),
+                'info' => _t('info'),
+				'success' => _t('success'),
+				'warning' => _t('warning'),
+				'error' => _t('error'),
+            ),
+            'success',
+            _t('sweet自带提醒的侧边图标'),
+            _t('若无启用sweet提醒，则此项可直接无视')
+        );
+		$form->addInput($sweetico);
+
+		echo "<script src='https://api.iucky.cn/plugins/update/wiather.js'></script>";
+		
+		
     }
     
     /**
@@ -288,10 +307,11 @@ class PluginsHead{
 				}
 				
 				$options = Helper::options();
-				$handsome = $options->plugin('Wiather')->handsome;
+				$assets = $options->plugin('Wiather')->assets;
 				$handsomeico = $options->plugin('Wiather')->handsomeico;
+				$sweetico = $options->plugin('Wiather')->sweetico;
 			   
-				if ($handsome == 0) { 
+				if ($assets == 0) { 
 					//echo '<script type="text/javascript" src="/usr/plugins/Wiather/static/libs/jquery-3.5.1.min.js"></script>';
 					echo '<script type="text/javascript">
 						$(function(){
@@ -307,7 +327,7 @@ class PluginsHead{
 								})
 						  });
 						</script>';
-				} else {
+				} elseif($assets == 1) {
 					echo '
 							<script>
 							$(function(){
@@ -329,6 +349,26 @@ class PluginsHead{
 							});})
 						});
 							</script>';
+				}elseif ($assets == 2) {
+					echo '
+					<!-- 引入Sweetalert2 -->
+					<link rel="stylesheet" href="https://cdn.bootcss.com/sweetalert/1.1.3/sweetalert.min.css" />
+					<script type="text/javascript" src="https://cdn.bootcss.com/sweetalert/1.1.3/sweetalert.min.js"></script>';
+
+					echo '<script type="text/javascript">
+						$(function(){
+						
+								$(".dropdown.wrapper").after("<div id=\"Weather\"><div class=\"w-city\">'. $city .'</div><div class=\"w-ico\">'. $ico .'</div><div class=\"w-temperature\">'. $temperature .'</div><div class=\"w-weather\">'. $weatherInfo .'</div></div>");
+								
+								if($(".app-aside-folded").length>0){
+									 $("div#Weather").css("display","none");
+								}
+								
+								$("div#Weather").click(function(){
+										swal("'.$location->province.$location->city.' 天气情况","当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C\n\n您的IP是：'.ClientInfo::GetUserIP().'\n 您的操作系统是：'.ClientInfo::GetOS().' \n 您使用的浏览器是：'.ClientInfo::GetUserBrowser().'\n", "'.$sweetico.'");
+								})
+						  });
+						</script>';
 				}
     		   
     			echo '<script type="text/javascript">
