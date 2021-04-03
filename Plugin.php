@@ -72,7 +72,7 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
 
 
 		// 天气信息
-        $form->addInput(PluginsForm::Weather());
+        $form->addInput(WiatherForm::Weather());
 
          // 天气弹窗样式
 		 $assets = new Typecho_Widget_Helper_Form_Element_Radio(
@@ -141,13 +141,13 @@ class Wiather_Plugin implements Typecho_Plugin_Interface{
     public static function footer(){
 
         // 天气信息
-		PluginsHead::Weather();
+		WiatherHead::Weather();
     }
     
     
 }
 /** 设置模块 */ 
-class PluginsForm{
+class WiatherForm{
 
 	// 天气信息
 	static function Weather(){
@@ -157,7 +157,7 @@ class PluginsForm{
 		return $result;
 	}
 }
-class PluginsHead{
+class WiatherHead{
 	
 	// 天气信息
 	static function Weather(){
@@ -168,7 +168,7 @@ class PluginsHead{
 		if(!empty($type)){
 		    
 		    // 定位 
-		    $location = ClientInfo::Location($type);
+		    $location = Wiather_ClientInfo::Location($type);
 		    
 		    echo '<style>
     		        div#Weather{
@@ -198,7 +198,7 @@ class PluginsHead{
 		    if($location -> status == 1){
 		        
 		        // 天气 
-		        $weather = ClientInfo::Weather($type);
+		        $weather = Wiather_ClientInfo::Weather($type);
 		    
     		    // 获取地理位置并截取余两位
     		    $city = mb_substr($location->city,0,2);
@@ -243,67 +243,67 @@ class PluginsHead{
     		    
     		    if(in_array($weatherInfo,$arrIco['sunny'])){
     		        
-    		        $ico = Ico::Weather("sunny");
+    		        $ico = WiaIco::Weather("sunny");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['cloud'])){
     		        
-    		        $ico = Ico::Weather("cloud");
+    		        $ico = WiaIco::Weather("cloud");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['cloudy'])){
     		        
-    		        $ico = Ico::Weather("cloudy");
+    		        $ico = WiaIco::Weather("cloudy");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['gale'])){
     		        
-    		        $ico = Ico::Weather("gale");
+    		        $ico = WiaIco::Weather("gale");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['smog'])){
     		        
-    		        $ico = Ico::Weather("smog");
+    		        $ico = WiaIco::Weather("smog");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['rain'])){
     		        
-    		        $ico = Ico::Weather("rain");
+    		        $ico = WiaIco::Weather("rain");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['thunderRain'])){
     		        
-    		        $ico = Ico::Weather("thunderRain");
+    		        $ico = WiaIco::Weather("thunderRain");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['rainStorm'])){
     		        
-    		        $ico = Ico::Weather("rainStorm");
+    		        $ico = WiaIco::Weather("rainStorm");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['sleet'])){
     		        
-    		        $ico = Ico::Weather("sleet");
+    		        $ico = WiaIco::Weather("sleet");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['snow'])){
     		        
-    		        $ico = Ico::Weather("snow");
+    		        $ico = WiaIco::Weather("snow");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['dust'])){
     		        
-    		        $ico = Ico::Weather("dust");
+    		        $ico = WiaIco::Weather("dust");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['tornado'])){
     		        
-    		        $ico = Ico::Weather("tornado");
+    		        $ico = WiaIco::Weather("tornado");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['fog'])){
     		        
-    		        $ico = Ico::Weather("fog");
+    		        $ico = WiaIco::Weather("fog");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['heat'])){
     		        
-    		        $ico = Ico::Weather("heat");
+    		        $ico = WiaIco::Weather("heat");
     		        
     		    }elseif(in_array($weatherInfo,$arrIco['cold'])){
     		        
-    		        $ico = Ico::Weather("cold");
+    		        $ico = WiaIco::Weather("cold");
     		        
     		    }else{
     		        
-    		        $ico = Ico::Weather("unknown");
+    		        $ico = WiaIco::Weather("unknown");
 				}
 				
 				$options = Helper::options();
@@ -323,7 +323,7 @@ class PluginsHead{
 								}
 								
 								$("div#Weather").click(function(){
-										alert("\n您的IP是：'.ClientInfo::GetUserIP().'\n\n您的操作系统是：'.ClientInfo::GetOS().'\n\n您使用的浏览器是：'.ClientInfo::GetUserBrowser().'\n\n您所在的位置是：'.$location->province.$location->city.'\n\n当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C");
+										alert("\n您的IP是：'.Wiather_ClientInfo::GetUserIP().'\n\n您的操作系统是：'.Wiather_ClientInfo::GetOS().'\n\n您使用的浏览器是：'.Wiather_ClientInfo::GetUserBrowser().'\n\n您所在的位置是：'.$location->province.$location->city.'\n\n当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C");
 								})
 						  });
 						</script>';
@@ -341,7 +341,7 @@ class PluginsHead{
 							
 							$("div#Weather").click(function(){
 							$.message({
-								message: "当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C<br />您的IP是：'.ClientInfo::GetUserIP().'<br /> 您的操作系统是：'.ClientInfo::GetOS().' <br /> 您使用的浏览器是：'.ClientInfo::GetUserBrowser().' <br />",
+								message: "当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C<br />您的IP是：'.Wiather_ClientInfo::GetUserIP().'<br /> 您的操作系统是：'.Wiather_ClientInfo::GetOS().' <br /> 您使用的浏览器是：'.Wiather_ClientInfo::GetUserBrowser().' <br />",
 								title: "'.$location->province.$location->city.' 天气情况",
 								type: "'.$handsomeico.'",
 								autoHide: !1,
@@ -365,7 +365,7 @@ class PluginsHead{
 								}
 								
 								$("div#Weather").click(function(){
-										swal("'.$location->province.$location->city.' 天气情况","当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C\n\n您的IP是：'.ClientInfo::GetUserIP().'\n 您的操作系统是：'.ClientInfo::GetOS().' \n 您使用的浏览器是：'.ClientInfo::GetUserBrowser().'\n", "'.$sweetico.'");
+										swal("'.$location->province.$location->city.' 天气情况","当前天气情况：'.$weatherInfo.$weather->winddirection.'风'.$temperature.'C\n\n您的IP是：'.Wiather_ClientInfo::GetUserIP().'\n 您的操作系统是：'.Wiather_ClientInfo::GetOS().' \n 您使用的浏览器是：'.Wiather_ClientInfo::GetUserBrowser().'\n", "'.$sweetico.'");
 								})
 						  });
 						</script>';
@@ -398,7 +398,7 @@ class PluginsHead{
  * @author  wibus
  * @return string
  */
-class ClientInfo{
+class Wiather_ClientInfo{
 	// 返回系统信息
 	public static function GetOS($user_agent=null) {
 		$userAgent 	= strtolower($user_agent ? : $_SERVER['HTTP_USER_AGENT']);
@@ -549,7 +549,7 @@ class ClientInfo{
  * JQ方式插入前端
  */
 
-class Ico{
+class WiaIco{
     
     // 天气图标
     public static function Weather($name){
